@@ -1,0 +1,43 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+}
+const { title, description } = Astro.props;
+---
+<!doctype html>
+<html lang="hr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="hr_HR" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "HomeAndConstructionBusiness",
+      "name": "MB Metamont d.o.o.",
+      "description": description,
+      "telephone": "+385953518960",
+      "email": "mbmetamont@gmail.com",
+      "areaServed": ["Rijeka", "Primorsko-goranska županija"],
+      "address": { "@type": "PostalAddress", "addressLocality": "Rijeka", "addressCountry": "HR" },
+      "openingHours": "Mo-Su 06:00-22:00"
+    })} />
+  </head>
+  <body class="font-sans">
+    <slot />
+  </body>
+</html>

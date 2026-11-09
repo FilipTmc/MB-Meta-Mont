@@ -1,0 +1,260 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Logo from '../components/Logo.astro';
+
+const contact = {
+  phone: '+385 95 351 8960',
+  phoneHref: 'tel:+385953518960',
+  whatsapp: '+386 64 264 500',
+  whatsappHref: 'https://wa.me/38664264500',
+  email: 'mbmetamont@gmail.com',
+  hours: 'Svaki dan, 6 – 22 h',
+};
+
+const img = (id: string, w = 1600) =>
+  `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=75`;
+
+const services = [
+  { title: 'Postavljanje parketa', text: 'Ugradnja parketa u stambenim i poslovnim prostorima.' },
+  { title: 'Brušenje parketa', text: 'Brušenje dotrajalog ili oštećenog parketa kao priprema za novu završnu obradu.' },
+  { title: 'Lakiranje parketa', text: 'Završna zaštita parketa lakom.' },
+  { title: 'Popravci', text: 'Popravak oštećenih dijelova parketa.' },
+  { title: 'Drvene stepenice', text: 'Radovi na drvenim stepenicama.' },
+  { title: 'Laminat', text: 'Postavljanje laminata.' },
+  { title: 'Priprema betona', text: 'Priprema betonske podloge prije postavljanja podnih obloga.' },
+];
+
+const reasons = [
+  { title: 'Sve na jednom mjestu', text: 'Od pripreme podloge do završne obrade, radove na podu možete dogovoriti kod jednog izvođača.' },
+  { title: 'Kvaliteta izvedbe', text: 'Cilj svakog posla je uredan pod koji lijepo izgleda i dugo traje.' },
+  { title: 'Jednostavan dogovor', text: 'Javite se telefonom, putem WhatsAppa ili e-mailom i dogovorite detalje.' },
+  { title: 'Rijeka i okolica', text: 'Radovi na području Rijeke i Primorsko-goranske županije.' },
+];
+
+const steps = [
+  { title: 'Javite se', text: 'Nazovite ili pošaljite poruku, po mogućnosti s fotografijama prostora.' },
+  { title: 'Dogovor', text: 'Dogovaraju se vrsta radova, rok i cijena.' },
+  { title: 'Izvođenje radova', text: 'Radovi se izvode prema dogovoru.' },
+];
+
+const gallery = [
+  { id: '1630699376289-b62375a35505', alt: 'Parket od hrasta uz bijeli zid', cls: 'md:col-span-2 md:row-span-2' },
+  { id: '1591638212063-c2f69701a931', alt: 'Drvene stepenice' },
+  { id: '1513467655676-561b7d489a88', alt: 'Brušenje drva' },
+  { id: '1570731151787-5e940db0de8a', alt: 'Detalj parketa' },
+  { id: '1676599786709-bf0cb733716a', alt: 'Stepenište i drveni pod' },
+];
+
+const areas = ['Rijeka', 'Okolica Rijeke', 'Primorsko-goranska županija'];
+
+const nav = [
+  { href: '#usluge', label: 'Usluge' },
+  { href: '#zasto', label: 'Zašto mi' },
+  { href: '#galerija', label: 'Galerija' },
+  { href: '#podrucje', label: 'Područje rada' },
+  { href: '#kontakt', label: 'Kontakt' },
+];
+---
+<Layout
+  title="MB Metamont | Parketar Rijeka – postavljanje, brušenje i lakiranje parketa"
+  description="Postavljanje, brušenje, lakiranje i popravak parketa, drvene stepenice i laminat u Rijeci i Primorsko-goranskoj županiji. Brz odaziv, svaki dan od 6 do 22 h."
+>
+  <!-- HEADER -->
+  <header class="fixed inset-x-0 top-0 z-50 border-b border-ink/5 bg-paper/90 backdrop-blur">
+    <div class="mx-auto flex h-18 max-w-6xl items-center justify-between px-5">
+      <Logo />
+      <nav class="hidden items-center gap-8 text-sm font-semibold text-muted lg:flex">
+        {nav.map((n) => <a href={n.href} class="transition hover:text-ink">{n.label}</a>)}
+      </nav>
+      <a href={contact.phoneHref} class="hidden rounded-full bg-ink px-5 py-2.5 text-sm font-bold text-paper transition hover:bg-brand sm:inline-flex">
+        {contact.phone}
+      </a>
+      <details class="group relative lg:hidden sm:ml-3">
+        <summary class="flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-full border border-ink/10" aria-label="Izbornik">
+          <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+        </summary>
+        <div class="absolute right-0 mt-3 w-56 rounded-2xl border border-ink/5 bg-white p-2 shadow-xl">
+          {nav.map((n) => <a href={n.href} class="block rounded-xl px-4 py-3 text-sm font-semibold hover:bg-sand">{n.label}</a>)}
+        </div>
+      </details>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="relative flex min-h-[92vh] items-end overflow-hidden pt-18">
+      <img src={img('1630699376289-b62375a35505', 2200)} alt="Hrastov parket" class="absolute inset-0 h-full w-full object-cover" fetchpriority="high" />
+      <div class="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/50 to-ink/10"></div>
+      <div class="relative mx-auto w-full max-w-6xl px-5 pb-16 md:pb-24">
+        <p class="mb-5 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-white/90 backdrop-blur">
+          <span class="h-1.5 w-1.5 rounded-full bg-brand"></span> Parketar · Rijeka i okolica
+        </p>
+        <h1 class="max-w-3xl text-4xl font-extrabold leading-[1.05] tracking-tight text-white sm:text-5xl md:text-6xl">
+          Postavljanje i obnova parketa u Rijeci i okolici
+        </h1>
+        <p class="mt-6 max-w-xl text-lg text-white/80">
+          Postavljanje, brušenje, lakiranje i popravak parketa, drvene stepenice, laminat i priprema betonske podloge.
+        </p>
+        <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+          <a href={contact.phoneHref} class="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-7 py-4 font-bold text-white transition hover:bg-brand-dark">
+            <svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg>
+            Nazovite {contact.phone}
+          </a>
+          <a href={contact.whatsappHref} target="_blank" rel="noopener" class="inline-flex items-center justify-center gap-2 rounded-full bg-white/10 px-7 py-4 font-bold text-white ring-1 ring-white/30 backdrop-blur transition hover:bg-white/20">
+            Pošaljite poruku na WhatsApp
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRAKA -->
+    <section class="border-b border-ink/5 bg-white">
+      <div class="mx-auto grid max-w-6xl grid-cols-2 gap-6 px-5 py-8 text-center md:grid-cols-4">
+        <div><p class="text-2xl font-extrabold">7 usluga</p><p class="text-sm text-muted">od podloge do završne obrade</p></div>
+        <div><p class="text-2xl font-extrabold">6 – 22 h</p><p class="text-sm text-muted">vrijeme za pozive</p></div>
+        <div><p class="text-2xl font-extrabold">Rijeka</p><p class="text-sm text-muted">i cijela okolica</p></div>
+        <div><p class="text-2xl font-extrabold">PGŽ</p><p class="text-sm text-muted">područje rada</p></div>
+      </div>
+    </section>
+
+    <!-- USLUGE -->
+    <section id="usluge" class="mx-auto max-w-6xl px-5 py-24">
+      <div class="max-w-2xl">
+        <p class="text-sm font-bold uppercase tracking-[0.2em] text-brand">Usluge</p>
+        <h2 class="mt-3 text-3xl font-extrabold tracking-tight md:text-4xl">Sve oko parketa na jednom mjestu</h2>
+        <p class="mt-4 text-lg text-muted">Radovi na parketu, laminatu i drvenim stepenicama, uključujući pripremu podloge.</p>
+      </div>
+      <div class="mt-14 grid gap-px overflow-hidden rounded-3xl bg-ink/10 sm:grid-cols-2 lg:grid-cols-3">
+        {services.map((s, i) => (
+          <article class="bg-paper p-8 transition hover:bg-white">
+            <p class="text-sm font-bold text-brand">{String(i + 1).padStart(2, '0')}</p>
+            <h3 class="mt-4 text-xl font-bold">{s.title}</h3>
+            <p class="mt-3 leading-relaxed text-muted">{s.text}</p>
+          </article>
+        ))}
+        <a href="#kontakt" class="group flex flex-col justify-between bg-ink p-8 lg:col-span-2 text-paper transition hover:bg-brand">
+          <p class="text-sm font-bold text-white/60">Niste sigurni što Vam treba?</p>
+          <p class="mt-6 text-xl font-bold">Javite se za dogovor <span class="inline-block transition group-hover:translate-x-1">→</span></p>
+        </a>
+      </div>
+    </section>
+
+    <!-- ZAŠTO -->
+    <section id="zasto" class="bg-sand">
+      <div class="mx-auto grid max-w-6xl gap-14 px-5 py-24 lg:grid-cols-2 lg:items-center">
+        <div class="relative">
+          <img src={img('1513467655676-561b7d489a88', 1200)} alt="Brušenje drvene površine" loading="lazy" class="aspect-[4/5] w-full rounded-3xl object-cover" />
+          <div class="absolute -bottom-6 right-6 rounded-2xl bg-white px-6 py-5 shadow-xl">
+            <p class="text-sm text-muted">Javite se</p>
+            <p class="text-lg font-extrabold">za dogovor</p>
+          </div>
+        </div>
+        <div>
+          <p class="text-sm font-bold uppercase tracking-[0.2em] text-brand">Zašto MB Metamont</p>
+          <h2 class="mt-3 text-3xl font-extrabold tracking-tight md:text-4xl">Pouzdan izvođač parketarskih radova</h2>
+          <div class="mt-10 grid gap-8 sm:grid-cols-2">
+            {reasons.map((r) => (
+              <div>
+                <div class="mb-4 h-1 w-10 rounded-full bg-brand"></div>
+                <h3 class="text-lg font-bold">{r.title}</h3>
+                <p class="mt-2 leading-relaxed text-muted">{r.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KAKO RADIM -->
+    <section class="mx-auto max-w-6xl px-5 py-24">
+      <p class="text-sm font-bold uppercase tracking-[0.2em] text-brand">Kako radim</p>
+      <h2 class="mt-3 text-3xl font-extrabold tracking-tight md:text-4xl">Tri koraka do novog poda</h2>
+      <ol class="mt-12 grid gap-6 md:grid-cols-3">
+        {steps.map((s, i) => (
+          <li class="rounded-3xl border border-ink/10 bg-white p-8">
+            <span class="flex h-11 w-11 items-center justify-center rounded-full bg-ink font-extrabold text-paper">{i + 1}</span>
+            <h3 class="mt-6 text-xl font-bold">{s.title}</h3>
+            <p class="mt-2 leading-relaxed text-muted">{s.text}</p>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <!-- GALERIJA -->
+    <section id="galerija" class="bg-ink py-24 text-paper">
+      <div class="mx-auto max-w-6xl px-5">
+        <div class="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+          <div>
+            <p class="text-sm font-bold uppercase tracking-[0.2em] text-brand">Galerija</p>
+            <h2 class="mt-3 text-3xl font-extrabold tracking-tight md:text-4xl">Drvo u najboljem izdanju</h2>
+          </div>
+          <p class="max-w-sm text-white/60">Svaki pod je drugačiji. Pošaljite fotografiju svog prostora i dogovorimo najbolje rješenje.</p>
+        </div>
+        <div class="mt-12 grid auto-rows-[220px] gap-4 md:grid-cols-4">
+          {gallery.map((g) => (
+            <img src={img(g.id, 1200)} alt={g.alt} loading="lazy" class:list={['h-full w-full rounded-2xl object-cover', g.cls]} />
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- PODRUČJE -->
+    <section id="podrucje" class="mx-auto max-w-6xl px-5 py-24">
+      <div class="grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:items-center">
+        <div>
+          <p class="text-sm font-bold uppercase tracking-[0.2em] text-brand">Područje rada</p>
+          <h2 class="mt-3 text-3xl font-extrabold tracking-tight md:text-4xl">Rijeka i Primorsko-goranska županija</h2>
+          <p class="mt-4 text-lg text-muted">Radovi se izvode na području Rijeke i Primorsko-goranske županije. Za ostale lokacije javite se za dogovor.</p>
+        </div>
+        <ul class="flex flex-wrap gap-3">
+          {areas.map((a) => (
+            <li class="rounded-full border border-ink/10 bg-white px-5 py-2.5 font-semibold">{a}</li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <!-- KONTAKT -->
+    <section id="kontakt" class="px-5 pb-24">
+      <div class="mx-auto max-w-6xl overflow-hidden rounded-[2rem] bg-ink text-white">
+        <div class="grid gap-12 p-8 md:p-14 lg:grid-cols-2">
+          <div>
+            <p class="text-sm font-bold uppercase tracking-[0.2em] text-white/70">Kontakt</p>
+            <h2 class="mt-3 text-3xl font-extrabold tracking-tight md:text-5xl">Treba Vam novi ili obnovljeni parket?</h2>
+            <p class="mt-5 max-w-md text-lg text-white/80">Nazovite ili pošaljite poruku s nekoliko fotografija prostora.</p>
+            <p class="mt-8 text-sm font-semibold text-white/70">Radno vrijeme za pozive</p>
+            <p class="text-xl font-bold">{contact.hours}</p>
+          </div>
+          <div class="grid gap-4 self-center">
+            <a href={contact.phoneHref} class="rounded-2xl bg-brand p-6 text-white transition hover:-translate-y-0.5">
+              <p class="text-sm font-semibold text-white/75">Telefon</p>
+              <p class="mt-1 text-2xl font-extrabold">{contact.phone}</p>
+            </a>
+            <a href={contact.whatsappHref} target="_blank" rel="noopener" class="rounded-2xl bg-white/10 p-6 ring-1 ring-white/25 transition hover:bg-white/15">
+              <p class="text-sm font-semibold text-white/70">WhatsApp</p>
+              <p class="mt-1 text-2xl font-extrabold">{contact.whatsapp}</p>
+            </a>
+            <a href={`mailto:${contact.email}`} class="rounded-2xl bg-white/10 p-6 ring-1 ring-white/25 transition hover:bg-white/15">
+              <p class="text-sm font-semibold text-white/70">E-mail</p>
+              <p class="mt-1 text-xl font-extrabold break-all">{contact.email}</p>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-ink/10">
+    <div class="mx-auto flex max-w-6xl flex-col gap-6 px-5 py-10 pb-28 md:flex-row md:items-center md:justify-between md:pb-10">
+      <Logo full />
+      <p class="text-sm text-muted">© {new Date().getFullYear()} MB Metamont d.o.o. · Parketarski radovi · Rijeka</p>
+    </div>
+  </footer>
+
+  <!-- MOBILNA TRAKA ZA POZIV -->
+  <div class="fixed inset-x-3 bottom-3 z-50 grid grid-cols-2 gap-2 rounded-2xl bg-ink p-2 shadow-2xl md:hidden">
+    <a href={contact.phoneHref} class="rounded-xl bg-brand py-3 text-center font-bold text-white">Nazovi</a>
+    <a href={contact.whatsappHref} target="_blank" rel="noopener" class="rounded-xl bg-white/10 py-3 text-center font-bold text-white">WhatsApp</a>
+  </div>
+</Layout>
