@@ -19,11 +19,11 @@ const { title, description } = Astro.props;
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="hr_HR" />
-    <meta property="og:image" content="/img/hero-1200.webp" />
+    <meta property="og:image" content="/img/hero-1200.jpg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..800&family=Inter:wght@400..600&display=swap" rel="stylesheet" />
-    <script is:inline>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400..600&display=swap" rel="stylesheet" />
+    <script is:inline>document.documentElement.classList.add('js');
       // uvodna animacija samo jednom po posjetu
       try { if (sessionStorage.getItem('mbm_intro') || matchMedia('(prefers-reduced-motion: reduce)').matches) { document.documentElement.classList.add('no-intro'); } else { sessionStorage.setItem('mbm_intro', '1'); } } catch (e) { document.documentElement.classList.add('no-intro'); }
     </script>

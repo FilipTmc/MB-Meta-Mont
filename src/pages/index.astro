@@ -12,59 +12,66 @@ const K = {
   podrucje: 'Rijeka i okolica',
 };
 
-// Fotografije: public/img/<ime>-720|1200|1600.webp
-const pic = (name: string) => ({
-  src: `/img/${name}-1200.webp`,
-  srcset: `/img/${name}-720.webp 720w, /img/${name}-1200.webp 1200w, /img/${name}-1600.webp 1600w`,
-});
+import { SIRINE, remoteUrl, lokalnoPostoji } from '../data/slike.mjs';
+
+// Fotografije: popis je u src/data/slike.json. Nakon "npm install" spremaju se u public/img
+// i tada se koriste lokalne datoteke. Ako lokalnih nema, učitavaju se s Unsplasha/Pexelsa.
+const pic = (name: string) => {
+  const local = lokalnoPostoji(process.cwd(), name);
+  const url = (w: number) => (local ? `/img/${name}-${w}.jpg` : remoteUrl(name, w));
+  return { src: url(1200), srcset: SIRINE.map((w) => `${url(w)} ${w}w`).join(', ') };
+};
 
 const usluge = [
-  { id: 'brusenje', img: 'brusenje', alt: 'Strojno brušeni parket riblja kost', naslov: 'Brušenje parketa',
-    tekst: 'Strojno brušenje skida stari lak, mrlje i ogrebotine do čistog drva i priprema pod za novu završnu obradu.',
-    tagovi: ['Skidanje starog laka', 'Uklanjanje ogrebotina', 'Ravnanje površine'] },
-  { id: 'lak', img: 'lak', alt: 'Dnevni boravak s lakiranim parketom', naslov: 'Lakiranje',
-    tekst: 'Novi lak štiti parket u svakodnevnoj upotrebi. Stupanj sjaja biramo zajedno s vama, od mat do sjajnog.',
-    tagovi: ['Mat, polumat ili sjaj', 'Stanovi, kuće i uredi', 'Zaštita za svakodnevno hodanje'] },
-  { id: 'ulje', img: 'ulje', alt: 'Uljeni hrastov parket izbliza', naslov: 'Uljenje',
-    tekst: 'Ulje naglašava prirodnu strukturu drva i daje mu topliji ton. Uljeni parket lako se održava i lokalno obnavlja.',
-    tagovi: ['Prirodan izgled drva', 'Topliji ton', 'Lokalna obnova'] },
-  { id: 'popravci', img: 'popravci', alt: 'Zamjena daske na drvenom podu', naslov: 'Popravci i zamjena dasaka',
-    tekst: 'Prije brušenja zamjenjujemo oštećene i labave daščice, kitamo fuge i saniramo mjesta oštećena vodom.',
-    tagovi: ['Labave daščice', 'Kitanje fuga', 'Oštećenja od vode'] },
-  { id: 'polaganje', img: 'polaganje', alt: 'Parketar postavlja novi pod', naslov: 'Polaganje parketa',
-    tekst: 'Postavljanje novog parketa u novogradnji i adaptacijama, s brušenjem i završnom obradom.',
-    tagovi: ['Klasični parket', 'Riblja kost', 'Brodski pod'] },
-  { id: 'osvjezavanje', img: 'odrzavanje', alt: 'Svijetla soba s parketom riblja kost', naslov: 'Osvježavanje parketa',
-    tekst: 'Kad parket nije za potpuno brušenje, često je dovoljno međubrušenje i novi sloj laka ili ulja.',
-    tagovi: ['Međubrušenje', 'Novi sloj laka ili ulja', 'Savjeti za održavanje'] },
+  { id: 'postavljanje', img: 'postavljanje', alt: 'Parketar postavlja pod', naslov: 'Postavljanje parketa',
+    tekst: 'Postavljanje parketa u stanovima, kućama i poslovnim prostorima.',
+    tagovi: ['Stanovi i kuće', 'Poslovni prostori'] },
+  { id: 'brusenje', img: 'brusenje', alt: 'Brusilica i brusni papir na drvu', naslov: 'Brušenje parketa',
+    tekst: 'Brušenje skida stari lak, mrlje i ogrebotine i priprema pod za novu završnu obradu.',
+    tagovi: ['Skidanje starog laka', 'Uklanjanje ogrebotina'] },
+  { id: 'lakiranje', img: 'lak', alt: 'Valjci za nanošenje na drvenom podu', naslov: 'Lakiranje',
+    tekst: 'Novi lak štiti parket u svakodnevnoj upotrebi i vraća mu lijep izgled.',
+    tagovi: ['Zaštita drva', 'Nakon brušenja'] },
+  { id: 'popravci', img: 'popravci', alt: 'Alat za popravke na drvenoj podlozi', naslov: 'Popravci',
+    tekst: 'Popravak oštećenih dijelova parketa, bez zamjene cijelog poda.',
+    tagovi: ['Oštećena mjesta', 'Bez zamjene poda'] },
+  { id: 'stepenice', img: 'stepenice', alt: 'Drvene stepenice uz bijeli zid', naslov: 'Drvene stepenice',
+    tekst: 'Parketarski radovi na drvenim stepenicama.',
+    tagovi: ['Stepenice u kućama i stanovima'] },
+  { id: 'laminat', img: 'laminat', alt: 'Dnevni boravak sa svijetlim podom', naslov: 'Laminat',
+    tekst: 'Postavljanje laminata u stambenim i poslovnim prostorima.',
+    tagovi: ['Stanovi i kuće', 'Poslovni prostori'] },
+  { id: 'beton', img: 'beton', alt: 'Prostor s betonskim podom i zidovima', naslov: 'Priprema betona',
+    tekst: 'Priprema betonske podloge prije postavljanja parketa ili laminata.',
+    tagovi: ['Podloga za parket', 'Podloga za laminat'] },
 ];
 
 const razlozi = [
-  { b: 'Pregled prije ponude', s: 'Pogledamo stanje parketa i predložimo obnovu koja ima smisla za vaš prostor.' },
-  { b: 'Ponuda prije početka radova', s: 'Prije prvog dana znate opseg radova i cijenu. Bez iznenađenja na kraju.' },
-  { b: 'Uredan rad u prostoru', s: 'Pazimo na zidove, vrata i prašinu, a prostor nakon radova ostavljamo čist.' },
-  { b: 'Jedan kontakt za cijeli posao', s: 'Od prvog poziva do primopredaje razgovarate s istom osobom.' },
+  { b: 'Brz odaziv', s: 'Na upit odgovaramo brzo, telefonom ili porukom.' },
+  { b: 'Kvalitetan rad', s: 'Od pripreme podloge do završnog laka.' },
+  { b: 'Vlasnik radi osobno', s: 'Radove izvodi vlasnik, a na većim objektima uz dodatnu pomoć.' },
+  { b: 'Dostupni svaki dan', s: 'Pozivi svaki dan od 6 do 22 sata.' },
 ];
 
 const koraci = [
-  { h: 'Upit i fotografije', p: 'Pošaljite upit ili nekoliko fotografija poda. Javit ćemo vam se i dogovoriti pregled.' },
-  { h: 'Pregled i ponuda', p: 'Pregledamo parket na licu mjesta, dogovorimo završnu obradu i pripremimo ponudu.' },
-  { h: 'Obnova', p: 'Popravci, brušenje i nanošenje laka ili ulja prema dogovorenom planu i terminu.' },
-  { h: 'Primopredaja', p: 'Zajedno pregledamo pod, a vi dobivate upute za korištenje i održavanje parketa.' },
+  { h: 'Javite se', p: 'Nazovite ili pošaljite poruku, po mogućnosti s nekoliko fotografija prostora.' },
+  { h: 'Dogovor', p: 'Dogovaramo vrstu radova, rok i cijenu.' },
+  { h: 'Izvođenje radova', p: 'Radove izvodimo prema dogovoru.' },
+  { h: 'Primopredaja', p: 'Zajedno pregledamo izvedene radove.' },
 ];
 
 const pitanja = [
-  { q: 'Može li se svaki stari parket obnoviti?', a: 'Većinu masivnog parketa moguće je obnoviti brušenjem. Ovisi o debljini drva i stanju daščica, što provjerimo pri pregledu. Oštećene daščice možemo zamijeniti.' },
-  { q: 'Koliko košta obnova parketa?', a: 'Cijena ovisi o površini, stanju poda i odabranoj završnoj obradi. Nakon pregleda pripremamo ponudu s jasno navedenim opsegom i cijenom, prije početka radova.' },
-  { q: 'Koliko traje obnova?', a: 'Ovisi o površini, stanju parketa te odabranom laku ili ulju. Termin početka i trajanje radova dogovaramo uz ponudu.' },
-  { q: 'Lak ili ulje?', a: 'Lak stvara zaštitni sloj i pogodan je za prostore u kojima se puno hoda. Ulje daje prirodniji izgled i lakše se lokalno obnavlja. Pomoći ćemo vam odabrati obradu koja odgovara vašem prostoru.' },
-  { q: 'Što je s prašinom i namještajem?', a: 'Prije radova dogovaramo pražnjenje prostora. Tijekom radova pazimo na prašinu, a prostor nakon završetka ostavljamo uredan.' },
-  { q: 'Kada se može hodati po parketu?', a: 'Ovisi o završnoj obradi. Pri primopredaji dobivate upute kada se pod može koristiti, kada se može vratiti namještaj i kako održavati parket.' },
+  { q: 'Na kojem području radite?', a: 'Radimo u Rijeci i okolici te na području Primorsko-goranske županije.' },
+  { q: 'Koje radove izvodite?', a: 'Postavljanje, brušenje, lakiranje i popravke parketa, radove na drvenim stepenicama, postavljanje laminata i pripremu betonske podloge.' },
+  { q: 'Može li se stari parket obnoviti?', a: 'Stari parket najčešće se može obnoviti brušenjem i novim lakom, a oštećena mjesta popraviti. Koliko je obnova moguća, vidi se na licu mjesta.' },
+  { q: 'Koliko košta?', a: 'Cijena ovisi o vrsti radova, površini i stanju poda, pa se dogovara za svaki posao posebno.' },
+  { q: 'Radite li i veće objekte?', a: 'Da. Na većim objektima radove izvodimo uz dodatnu pomoć.' },
+  { q: 'Kada vas mogu nazvati?', a: 'Svaki dan od 6 do 22 sata. Poruku na WhatsApp ili e-mail možete poslati bilo kada.' },
 ];
 
 const opcije = [
-  ['obnova', 'Obnova starog parketa'], ['brusenje', 'Brušenje parketa'], ['lak', 'Lakiranje'], ['ulje', 'Uljenje'],
-  ['popravci', 'Popravci i zamjena dasaka'], ['polaganje', 'Polaganje novog parketa'], ['osvjezavanje', 'Osvježavanje parketa'], ['ne-znam', 'Još ne znam'],
+  ['postavljanje', 'Postavljanje parketa'], ['brusenje', 'Brušenje parketa'], ['lakiranje', 'Lakiranje'], ['popravci', 'Popravci'],
+  ['stepenice', 'Drvene stepenice'], ['laminat', 'Laminat'], ['beton', 'Priprema betona'], ['ne-znam', 'Još ne znam'],
 ];
 
 const izbornik = [
@@ -77,8 +84,8 @@ const waIco = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10
 const mailIco = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14"/><path d="m3 7 9 6 9-6"/></svg>';
 ---
 <Layout
-  title="MB Metamont · Obnova i polaganje parketa Rijeka"
-  description="Obnova starog parketa u Rijeci i okolici: brušenje, popravci i zamjena dasaka, lakiranje i uljenje te polaganje novog parketa. Ponuda prije početka radova."
+  title="MB Metamont · Parketarski radovi Rijeka"
+  description="Parketarski radovi u Rijeci i Primorsko-goranskoj županiji: postavljanje, brušenje, lakiranje i popravci parketa, drvene stepenice, laminat i priprema betona."
 >
   <div class="intro" aria-hidden="true">
     <img class="m" src="/logo/mark-light.svg" alt="" />
@@ -86,22 +93,14 @@ const mailIco = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stro
     <img class="w" src="/logo/word-light.svg" alt="" />
   </div>
 
-  <div class="topbar"><div class="wrap">
-    <div class="l">MB Metamont <span>· Obnova i polaganje parketa, {K.mjesto}</span></div>
-    <div class="r">
-      <a href={K.telHref}>{K.tel}</a>
-      <a class="hide-m" href={`mailto:${K.mail}`}>{K.mail}</a>
-    </div>
-  </div></div>
-
-  <header class="nav"><div class="wrap">
+  <header class="nav"><div class="wrap"><div class="bar">
     <a class="logo" href="/" aria-label="MB Metamont"><img src="/logo/logo-h.svg" alt="MB Metamont parket" width="250" height="37" /></a>
     <nav class="menu" aria-label="Glavni izbornik">
       {izbornik.map(([h, t]) => <a href={h}>{t}</a>)}
     </nav>
     <a class="btn btn-p" href="#upit">Zatražite ponudu</a>
-    <button class="burger" aria-label="Izbornik" aria-expanded="false"><span></span><span></span><span></span></button>
-  </div></header>
+    <button class="burger" aria-label="Izbornik" aria-expanded="false"><span></span><span></span></button>
+  </div></div></header>
   <div class="mnav">
     {izbornik.map(([h, t]) => <a href={h}>{t}</a>)}
     <a class="btn btn-p" href="#upit">Zatražite ponudu</a>
@@ -109,153 +108,166 @@ const mailIco = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stro
 
   <main>
     <!-- HERO -->
-    <section class="hero">
-      <div class="bg"><img {...pic('hero')} sizes="100vw" alt="Obnovljeni parket u starom stanu s visokim stropovima" fetchpriority="high" decoding="async" /></div>
-      <canvas class="fx"></canvas>
-      <div class="wrap">
-        <div class="eyebrow">Obnova parketa · {K.mjesto}</div>
-        <h1>Stari parket.<br /><em>Kao nov.</em></h1>
-        <p class="lead">Brušenje, popravci i nova završna obrada lakom ili uljem. Drvo koje već imate vraćamo u stanje kakvo pamtite, bez zamjene cijelog poda.</p>
-        <div class="cta">
-          <a class="btn btn-p" href="#upit">Zatražite ponudu <Fragment set:html={arrow} /></a>
-          <a class="btn btn-o" href="#prije">Pogledajte prije i poslije</a>
+    <section class="hero"><div class="wrap"><div class="grid">
+      <div>
+        <div class="eyebrow rv">Parketarski radovi · {K.mjesto}</div>
+        <h1 class="rv" style="--d:.08s">Stari parket.<br /><em>Kao nov.</em></h1>
+        <p class="lead rv" style="--d:.16s">Postavljanje, brušenje, lakiranje i popravci parketa, drvene stepenice, laminat i priprema betona. Rijeka i Primorsko-goranska županija.</p>
+        <div class="cta rv" style="--d:.24s">
+          <a class="btn btn-p" href="#upit">Zatražite ponudu <span class="arr" set:html={arrow} /></a>
+          <a class="btn btn-l" href="#usluge">Pogledajte usluge</a>
         </div>
-        <div class="facts">
-          <div><b>Obnova starog parketa</b><span>Brušenje, popravci, lak ili ulje</span></div>
-          <div><b>Stanovi, kuće, poslovni prostori</b><span>Za vlasnike, investitore i izvođače</span></div>
-          <div><b>Ponuda prije početka</b><span>Opseg i cijena dogovoreni unaprijed</span></div>
+        <div class="quick rv" style="--d:.32s">
+          <a href={K.telHref}><i set:html={phoneIco} /><span><small>Pozivi 6 – 22 h</small><b>{K.tel}</b></span></a>
+          <a href={K.waHref} target="_blank" rel="noopener"><i set:html={waIco} /><span><small>WhatsApp</small><b>{K.wa}</b></span></a>
         </div>
       </div>
-    </section>
+      <div class="vis rv" style="--d:.2s">
+        <div class="ph1"><img {...pic('hero')} sizes="(max-width:960px) 100vw, 560px" alt="Drveni pod u prostranom stanu" fetchpriority="high" decoding="async" /></div>
+        <div class="ph2"><img {...pic('stepenice')} sizes="240px" alt="Drvene stepenice" loading="lazy" decoding="async" /></div>
+        <div class="badge"><span class="dot"></span><div><b>Dostupni svaki dan</b><span>od 6 do 22 sata</span></div></div>
+      </div>
+    </div></div></section>
+
+    <div class="tickw" aria-hidden="true"><div class="ticker"><div class="tr">
+      {[0, 1].map(() => usluge.map((u) => <span>{u.naslov}</span>))}
+    </div></div></div>
 
     <!-- USLUGE -->
-    <section class="sec light" id="usluge"><div class="wrap">
-      <div class="head">
-        <div class="eyebrow">Usluge</div>
-        <h2>Sve što treba starom parketu, na jednom mjestu.</h2>
-        <p class="lead">Najčešće radimo obnovu postojećeg parketa. Svaki posao počinje pregledom poda i jasnim dogovorom o opsegu i cijeni.</p>
+    <section class="sec" id="usluge"><div class="wrap">
+      <div class="head-row">
+        <div class="head rv">
+          <div class="eyebrow">Usluge</div>
+          <h2>Sve oko poda, <em>na jednom mjestu.</em></h2>
+        </div>
+        <p class="lead rv" style="--d:.1s">Od pripreme betonske podloge do postavljanja, brušenja i lakiranja parketa.</p>
       </div>
-      <div class="grid3">
-        {usluge.map((u) => (
-          <article class="svc">
-            <div class="im"><img {...pic(u.img)} sizes="(max-width:620px) 100vw, (max-width:1000px) 50vw, 400px" alt={u.alt} loading="lazy" decoding="async" /></div>
-            <div class="tx">
-              <h3>{u.naslov}</h3>
-              <p>{u.tekst}</p>
-              <ul>{u.tagovi.map((t) => <li>{t}</li>)}</ul>
-              <a class="more" href="#upit" data-usluga={u.id}>Zatražite ponudu <Fragment set:html={arrow} /></a>
-            </div>
-          </article>
+      <div class="bento">
+        {usluge.map((u, i) => (
+          <a class="svc rv" href="#upit" data-usluga={u.id} style={`--d:${(i % 4) * 0.08}s`}>
+            <img {...pic(u.img)} sizes={i === 0 ? '(max-width:1000px) 100vw, 620px' : '(max-width:600px) 100vw, (max-width:1000px) 50vw, 310px'} alt={u.alt} loading="lazy" decoding="async" />
+            <span class="n">{String(i + 1).padStart(2, '0')}</span>
+            <span class="go" set:html={arrow} />
+            <div class="tx"><h3>{u.naslov}</h3><p>{u.tekst}</p></div>
+          </a>
         ))}
+        <div class="svc svc-cta rv">
+          <small>Niste sigurni što vam treba?</small>
+          <h3>Javite se i opišite prostor. Dogovorit ćemo ostalo.</h3>
+          <a class="btn" href="#upit">Pošaljite upit <span class="arr" set:html={arrow} /></a>
+        </div>
       </div>
     </div></section>
 
     <!-- PRIJE / POSLIJE -->
-    <section class="sec" id="prije"><div class="wrap"><div class="bawrap">
-      <div>
-        <div class="eyebrow">Prije i poslije</div>
-        <h2>Isti pod. Nakon obnove.</h2>
-        <p class="lead">Povucite klizač i usporedite. Posivjelo drvo, ogrebotine i istrošeni lak nestaju nakon brušenja i nove završne obrade.</p>
-        <ul class="bal">
-          <li>Drvo ostaje isto, mijenja se samo površina</li>
-          <li>Bez rušenja i bez zamjene cijelog poda</li>
-          <li>Lak ili ulje prema vašem izboru</li>
-        </ul>
-        <a class="btn btn-p" href="#upit" data-usluga="obnova">Zatražite procjenu poda <Fragment set:html={arrow} /></a>
-      </div>
-      <div class="ba">
-        <img {...pic('poslije')} sizes="(max-width:900px) 100vw, 640px" alt="Parket nakon obnove" loading="lazy" decoding="async" />
-        <div class="b4"><img {...pic('prije')} sizes="(max-width:900px) 100vw, 640px" alt="Isti parket prije obnove, posivio i izgreben" loading="lazy" decoding="async" /></div>
+    <section class="sec" id="prije" style="padding-top:0"><div class="wrap"><div class="bawrap">
+      <div class="ba rv">
+        <img {...pic('poslije')} sizes="(max-width:900px) 100vw, 700px" alt="Drveni pod nakon obrade" loading="lazy" decoding="async" />
+        <div class="b4"><img {...pic('prije')} sizes="(max-width:900px) 100vw, 700px" alt="Istrošen drveni pod" loading="lazy" decoding="async" /></div>
         <div class="hdl"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6" /></svg></i></div>
-        <input type="range" min="0" max="100" value="50" step="0.5" aria-label="Usporedba prije i poslije obnove" />
+        <input type="range" min="0" max="100" value="50" step="0.5" aria-label="Usporedba prije i poslije" />
         <span class="lb l">Prije</span><span class="lb r">Poslije</span>
+      </div>
+      <div class="rv" style="--d:.1s">
+        <div class="eyebrow">Prije i poslije</div>
+        <h2>Isti pod. <em>Nakon obrade.</em></h2>
+        <p class="lead">Povucite klizač i usporedite. Brušenje i novi lak potpuno mijenjaju izgled istrošenog poda.</p>
+        <ul class="bal">
+          <li>Brušenje skida stari lak i ogrebotine</li>
+          <li>Novi lak štiti drvo</li>
+          <li>Bez zamjene cijelog poda</li>
+        </ul>
+        <a class="btn btn-d" href="#upit" data-usluga="brusenje">Zatražite ponudu <span class="arr" set:html={arrow} /></a>
       </div>
     </div></div></section>
 
-    <!-- ZAŠTO OBNOVA -->
-    <section class="sec band" id="zasto">
-      <div class="bg"><img {...pic('band')} sizes="100vw" alt="Svježe lakiran parket u velikom prostoru" loading="lazy" decoding="async" /></div>
-      <canvas class="fx"></canvas>
-      <div class="wrap"><div class="cols">
-        <div>
-          <div class="eyebrow">Zašto obnova</div>
-          <h2>Masivni parket traje desetljećima. Treba ga samo obnoviti.</h2>
-          <p class="lead">Masivni parket u pravilu se može brusiti više puta. Obnova je brža i povoljnija od zamjene poda, a prostor zadržava toplinu i karakter pravog drva.</p>
-          <a class="btn btn-p" href="#upit" data-usluga="obnova">Dogovorite pregled poda <Fragment set:html={arrow} /></a>
+    <!-- ZAŠTO -->
+    <section id="zasto"><div class="wrap">
+      <div class="why rv">
+        <div class="bg"><img {...pic('band')} sizes="100vw" alt="" loading="lazy" decoding="async" /></div>
+        <canvas class="fx"></canvas>
+        <div class="in">
+          <div>
+            <div class="eyebrow">Zašto MB Metamont</div>
+            <h2>Brz odaziv i <em>kvalitetan rad.</em></h2>
+            <p class="lead">Parketarski radovi u Rijeci i okolici, od prvog poziva do gotovog poda.</p>
+            <a class="btn btn-p" href="#upit" data-usluga="ne-znam">Zatražite ponudu <span class="arr" set:html={arrow} /></a>
+          </div>
+          <div class="pts">
+            {razlozi.map((r, i) => <div class="pt rv" style={`--d:${i * 0.1}s`}><i>{i + 1}</i><b>{r.b}</b><span>{r.s}</span></div>)}
+          </div>
         </div>
-        <div class="pts">
-          {razlozi.map((r) => <div class="pt"><b>{r.b}</b><span>{r.s}</span></div>)}
-        </div>
-      </div></div>
-    </section>
+      </div>
+    </div></section>
 
     <!-- KAKO RADIMO -->
-    <section class="sec light" id="kako"><div class="wrap">
-      <div class="head center">
+    <section class="sec" id="kako"><div class="wrap">
+      <div class="head rv">
         <div class="eyebrow">Kako radimo</div>
-        <h2>Od prvog poziva do obnovljenog poda u četiri koraka.</h2>
+        <h2>Od prvog poziva do gotovog poda <em>u četiri koraka.</em></h2>
       </div>
-      <div class="steps">
-        {koraci.map((k, i) => <div class="step"><i>{String(i + 1).padStart(2, '0')}</i><h3>{k.h}</h3><p>{k.p}</p></div>)}
+      <div class="tl">
+        <span class="fill"></span>
+        {koraci.map((k, i) => <div class="st"><i>{String(i + 1).padStart(2, '0')}</i><h3>{k.h}</h3><p>{k.p}</p></div>)}
       </div>
-      <div class="after">
-        <div><b>Niste sigurni može li se vaš parket obnoviti?</b><span>Pošaljite fotografiju poda i reći ćemo vam što je moguće.</span></div>
-        <a class="btn btn-d" href={K.waHref} target="_blank" rel="noopener">Pošaljite fotografiju <Fragment set:html={arrow} /></a>
+      <div class="after rv">
+        <div><b>Imate pitanje o svom podu?</b><span>Pošaljite fotografiju na WhatsApp.</span></div>
+        <a class="btn btn-wa" href={K.waHref} target="_blank" rel="noopener"><Fragment set:html={waIco} /> Pošaljite fotografiju</a>
       </div>
     </div></section>
 
     <!-- O NAMA -->
-    <section class="sec" id="onama"><div class="wrap"><div class="split">
-      <div class="im">
-        <img {...pic('onama')} sizes="(max-width:700px) 100vw, 50vw" alt="Parketar s alatom za obradu poda" loading="lazy" decoding="async" />
+    <section class="sec" id="onama" style="padding-top:0"><div class="wrap"><div class="split">
+      <div class="im rv">
+        <img {...pic('onama')} sizes="(max-width:900px) 100vw, 540px" alt="Parketar pri radu" loading="lazy" decoding="async" />
         <div class="tag">MB Metamont · {K.mjesto}</div>
       </div>
-      <div>
+      <div class="rv" style="--d:.1s">
         <div class="eyebrow">O nama</div>
-        <h2>Parketarski radovi u Rijeci, s posebnom ljubavi prema starim podovima.</h2>
-        <p class="lead">MB Metamont izvodi parketarske radove u Rijeci i okolici, a najviše obnovu starog parketa u stanovima, kućama i poslovnim prostorima.</p>
-        <p>Svaki pod je drugačiji: vrsta drva, starost i dosadašnje održavanje. Zato prije ponude pogledamo stanje parketa i predložimo obnovu koja ima smisla za vaš prostor i budžet.</p>
+        <h2>Parketarski radovi <em>u Rijeci i okolici.</em></h2>
+        <p class="lead">MB Metamont d.o.o. izvodi parketarske radove na području Rijeke i Primorsko-goranske županije, od pripreme betonske podloge do postavljanja, brušenja i lakiranja parketa.</p>
+        <p>Radove izvodi vlasnik osobno, a na većim objektima uz dodatnu pomoć. U Hrvatskoj radimo dvije godine.</p>
         <div class="kv">
-          <div><b>Sjedište</b><span>{K.mjesto}</span></div>
-          <div><b>Djelatnost</b><span>Obnova i polaganje parketa</span></div>
-          <div><b>Područje rada</b><span>{K.podrucje}</span></div>
-          <div><b>Klijenti</b><span>Vlasnici stanova i kuća, investitori, tvrtke</span></div>
+          <div><b>Tvrtka</b><span>MB Metamont d.o.o.</span></div>
+          <div><b>Područje rada</b><span>Rijeka i Primorsko-goranska županija</span></div>
+          <div><b>Usluge</b><span>Parket, laminat, stepenice, beton</span></div>
+          <div><b>Pozivi</b><span>Svaki dan, 6 – 22 h</span></div>
         </div>
-        <a class="btn btn-p" href="#upit">Zatražite ponudu <Fragment set:html={arrow} /></a>
+        <a class="btn btn-p" href="#upit">Zatražite ponudu <span class="arr" set:html={arrow} /></a>
       </div>
     </div></div></section>
 
     <!-- PITANJA -->
-    <section class="sec light" id="pitanja"><div class="wrap">
-      <div class="head center">
+    <section class="sec" id="pitanja" style="padding-top:0"><div class="wrap"><div class="faqw">
+      <div class="side rv">
         <div class="eyebrow">Česta pitanja</div>
-        <h2>Što nas klijenti najčešće pitaju.</h2>
+        <h2>Što nas klijenti <em>najčešće pitaju.</em></h2>
+        <p class="lead">Niste pronašli odgovor? Nazovite nas svaki dan od 6 do 22 sata.</p>
+        <a class="btn btn-d" href={K.telHref}><Fragment set:html={phoneIco} /> {K.tel}</a>
       </div>
       <div class="faq">
-        {pitanja.map((p) => (
-          <div class="q">
+        {pitanja.map((p, i) => (
+          <div class="q rv" style={`--d:${i * 0.06}s`}>
             <button aria-expanded="false">{p.q}<i>+</i></button>
             <div class="a"><p>{p.a}</p></div>
           </div>
         ))}
       </div>
-    </div></section>
+    </div></div></section>
 
     <!-- KONTAKT -->
-    <section class="sec" id="kontakt"><div class="wrap"><div class="contact">
+    <section id="kontakt"><div class="wrap"><div class="cbox rv">
       <div>
         <div class="eyebrow">Kontakt</div>
-        <h2>Recite nam kakav parket imate.</h2>
-        <p class="lead">Nazovite ili pošaljite upit s nekoliko podataka o podu. Javit ćemo vam se i dogovoriti pregled ili pripremu ponude.</p>
+        <h2>Recite nam kakav <em>pod imate.</em></h2>
+        <p class="lead">Nazovite ili pošaljite upit s nekoliko podataka o podu. Javit ćemo vam se i dogovoriti detalje.</p>
         <div class="ci">
-          <div><b>Telefon</b><a href={K.telHref}>{K.tel}</a></div>
-          <div><b>WhatsApp</b><a href={K.waHref} target="_blank" rel="noopener">{K.wa}</a></div>
-          <div><b>E-pošta</b><a href={`mailto:${K.mail}`}>{K.mail}</a></div>
-          <div><b>Pozivi</b><span>{K.sati}</span></div>
-          <div><b>Područje rada</b><span>{K.podrucje}</span></div>
+          <a href={K.telHref}><i set:html={phoneIco} /><span><small>Telefon · {K.sati}</small><b>{K.tel}</b></span></a>
+          <a href={K.waHref} target="_blank" rel="noopener"><i set:html={waIco} /><span><small>WhatsApp</small><b>{K.wa}</b></span></a>
+          <a href={`mailto:${K.mail}`}><i set:html={mailIco} /><span><small>E-pošta</small><b>{K.mail}</b></span></a>
         </div>
         <div class="map" data-src="https://www.google.com/maps?q=Rijeka&output=embed">
-          <div class="ph"><b>{K.podrucje}</b><span>Kliknite za prikaz karte</span><button class="btn btn-d" type="button">Prikaži kartu</button></div>
+          <div class="ph"><b>{K.podrucje} · Primorsko-goranska županija</b><button class="btn" type="button">Prikaži kartu</button></div>
         </div>
       </div>
 
@@ -276,10 +288,10 @@ const mailIco = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stro
           </div>
           <div class="fld"><label for="povrsina">Površina (približno m²)</label><input id="povrsina" name="povrsina" inputmode="numeric" placeholder="npr. 60" /></div>
         </div>
-        <div class="fld"><label for="poruka">Nekoliko riječi o podu</label><textarea id="poruka" name="poruka" placeholder="Vrsta parketa, stanje, prostorije..."></textarea></div>
+        <div class="fld"><label for="poruka">Nekoliko riječi o podu</label><textarea id="poruka" name="poruka" placeholder="Vrsta poda, stanje, prostorije..."></textarea></div>
         <div class="btns">
-          <button class="btn btn-p" type="submit" data-via="mail">Pošaljite e-mailom <Fragment set:html={mailIco} /></button>
-          <button class="btn btn-wa" type="submit" data-via="wa">Pošaljite na WhatsApp <Fragment set:html={waIco} /></button>
+          <button class="btn btn-p" type="submit" data-via="mail"><Fragment set:html={mailIco} /> Pošaljite e-mailom</button>
+          <button class="btn btn-wa" type="submit" data-via="wa"><Fragment set:html={waIco} /> Pošaljite na WhatsApp</button>
         </div>
         <small>Vaše podatke koristimo isključivo za odgovor na upit.</small>
       </form>
@@ -289,12 +301,12 @@ const mailIco = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stro
   <footer><div class="wrap">
     <div class="fcols">
       <div>
-        <a class="logo" href="/"><img src="/logo/logo-light.svg" alt="MB Metamont parket" width="250" height="37" /></a>
-        <p>Obnova starog parketa, brušenje, lakiranje i uljenje te polaganje novog parketa. {K.podrucje}.</p>
+        <a class="logo" href="/"><img src="/logo/logo-h.svg" alt="MB Metamont parket" width="250" height="37" /></a>
+        <p>Postavljanje, brušenje, lakiranje i popravci parketa, drvene stepenice, laminat i priprema betona. {K.podrucje}.</p>
       </div>
       <div><h4>Usluge</h4><ul>
-        <li><a href="#usluge">Brušenje parketa</a></li><li><a href="#usluge">Lakiranje i uljenje</a></li>
-        <li><a href="#usluge">Popravci i zamjena dasaka</a></li><li><a href="#usluge">Polaganje parketa</a></li>
+        <li><a href="#usluge">Postavljanje parketa</a></li><li><a href="#usluge">Brušenje i lakiranje</a></li>
+        <li><a href="#usluge">Drvene stepenice</a></li><li><a href="#usluge">Laminat i priprema betona</a></li>
       </ul></div>
       <div><h4>MB Metamont</h4><ul>
         <li><a href="#onama">O nama</a></li><li><a href="#prije">Prije i poslije</a></li>
@@ -335,10 +347,17 @@ const mailIco = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stro
     var $=function(s,r){return (r||document).querySelector(s)}, $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
     var RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    /* pojavljivanje pri skrolanju + vremenska crta */
+    if('IntersectionObserver' in window&&!RM){
+      var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){x.target.classList.add(x.target.classList.contains('tl')?'in':'on');io.unobserve(x.target)}})},{threshold:.15,rootMargin:'0px 0px -40px 0px'});
+      $$('.rv,.tl').forEach(function(el){io.observe(el)});
+    }else{$$('.rv').forEach(function(el){el.classList.add('on')});$$('.tl').forEach(function(el){el.classList.add('in')})}
+
     /* mobilni izbornik */
     var bg=$('.burger'), mn=$('.mnav');
+    function mClose(){mn.classList.remove('open');document.body.classList.remove('lock');bg.setAttribute('aria-expanded',false)}
     if(bg&&mn){bg.addEventListener('click',function(){var o=mn.classList.toggle('open');document.body.classList.toggle('lock',o);bg.setAttribute('aria-expanded',o)});
-    $$('a',mn).forEach(function(a){a.addEventListener('click',function(){mn.classList.remove('open');document.body.classList.remove('lock')})})}
+    $$('a',mn).forEach(function(a){a.addEventListener('click',mClose)})}
 
     /* pitanja */
     $$('.q').forEach(function(q){var b=$('button',q),a=$('.a',q);b.addEventListener('click',function(){var o=q.classList.toggle('open');a.style.maxHeight=o?a.scrollHeight+'px':'0';b.setAttribute('aria-expanded',o)})});
@@ -370,18 +389,18 @@ const mailIco = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stro
     function flClose(){if(fl)fl.classList.remove('open')}
     if(flb)flb.addEventListener('click',function(){fl.classList.toggle('open')});
     if(flx)flx.addEventListener('click',flClose);
-    document.addEventListener('keydown',function(e){if(e.key==='Escape'){flClose();if(mn&&mn.classList.contains('open')){mn.classList.remove('open');document.body.classList.remove('lock')}}});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'){flClose();if(mn&&mn.classList.contains('open'))mClose()}});
 
     /* karta na klik */
     var map=$('.map');if(map){$('.map .ph').addEventListener('click',function(){var fr=document.createElement('iframe');fr.loading='lazy';fr.referrerPolicy='no-referrer-when-downgrade';fr.src=map.getAttribute('data-src');fr.title='Karta';map.innerHTML='';map.appendChild(fr)})}
 
-    /* iskrice na velikim fotografijama */
+    /* iskrice */
     if(!RM){
       $$('canvas.fx').forEach(function(c){
         var ctx=c.getContext('2d'),ps=[],run=false,W,H,raf;
         function mk(init){return {x:Math.random()*W,y:init?Math.random()*H:H+10,r:Math.random()*1.4+.4,vy:-(Math.random()*.25+.08),vx:(Math.random()-.5)*.15,a:Math.random()*.6+.2,t:Math.random()*6.28}}
-        function size(){W=c.width=c.offsetWidth;H=c.height=c.offsetHeight;ps=[];for(var i=0;i<Math.max(14,Math.round(W/70));i++)ps.push(mk(true))}
-        function tick(){if(!run)return;ctx.clearRect(0,0,W,H);for(var i=0;i<ps.length;i++){var p=ps[i];p.t+=.02;p.x+=p.vx+Math.sin(p.t)*.1;p.y+=p.vy;if(p.y<-10||p.x<-10||p.x>W+10)ps[i]=mk(false);ctx.globalAlpha=p.a*(0.6+0.4*Math.sin(p.t*1.7));ctx.fillStyle='#dfe6ff';ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,6.28);ctx.fill()}raf=requestAnimationFrame(tick)}
+        function size(){W=c.width=c.offsetWidth;H=c.height=c.offsetHeight;ps=[];for(var i=0;i<Math.max(14,Math.round(W/60));i++)ps.push(mk(true))}
+        function tick(){if(!run)return;ctx.clearRect(0,0,W,H);for(var i=0;i<ps.length;i++){var p=ps[i];p.t+=.02;p.x+=p.vx+Math.sin(p.t)*.1;p.y+=p.vy;if(p.y<-10||p.x<-10||p.x>W+10)ps[i]=mk(false);ctx.globalAlpha=p.a*(0.6+0.4*Math.sin(p.t*1.7));ctx.fillStyle='#f1d2a4';ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,6.28);ctx.fill()}raf=requestAnimationFrame(tick)}
         size();addEventListener('resize',size);
         new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){if(!run){run=true;tick()}}else{run=false;cancelAnimationFrame(raf)}})},{threshold:.05}).observe(c);
       });
@@ -390,11 +409,11 @@ const mailIco = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stro
     /* prije / poslije klizač */
     $$('.ba').forEach(function(ba){var r=$('input',ba);function set(v){ba.style.setProperty('--p',v+'%')}
       r.addEventListener('input',function(){set(r.value);ba.dataset.t='1'});
-      if(!RM&&'IntersectionObserver' in window){var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting&&!ba.dataset.t){io.disconnect();var t0=null;function st(t){if(ba.dataset.t)return;if(!t0)t0=t;var k=(t-t0)/2600;if(k>1){set(50);r.value=50;return}var v=50+Math.sin(k*Math.PI*2)*22;set(v.toFixed(1));r.value=v;requestAnimationFrame(st)}setTimeout(function(){requestAnimationFrame(st)},500)}})},{threshold:.5});io.observe(ba)}
+      if(!RM&&'IntersectionObserver' in window){var o=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting&&!ba.dataset.t){o.disconnect();var t0=null;function st(t){if(ba.dataset.t)return;if(!t0)t0=t;var k=(t-t0)/2600;if(k>1){set(50);r.value=50;return}var v=50+Math.sin(k*Math.PI*2)*22;set(v.toFixed(1));r.value=v;requestAnimationFrame(st)}setTimeout(function(){requestAnimationFrame(st)},700)}})},{threshold:.5});o.observe(ba)}
     });
 
     /* sjena navigacije */
-    var nav=$('.nav');addEventListener('scroll',function(){if(nav)nav.style.boxShadow=scrollY>10?'0 8px 30px -18px rgba(0,0,0,.35)':'none'},{passive:true});
+    var nav=$('.nav');function ns(){nav.classList.toggle('sc',scrollY>10)}ns();addEventListener('scroll',ns,{passive:true});
   })();
   </script>
 </Layout>

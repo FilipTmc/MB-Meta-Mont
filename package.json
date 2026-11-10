@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "slike": "node scripts/slike.mjs",
+    "postinstall": "node scripts/slike.mjs || true"
   },
   "keywords": [],
   "author": "",
