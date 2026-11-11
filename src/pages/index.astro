@@ -16,6 +16,9 @@ import { SIRINE, remoteUrl, lokalnoPostoji } from '../data/slike.mjs';
 
 // Fotografije: popis je u src/data/slike.json. Nakon "npm install" spremaju se u public/img
 // i tada se koriste lokalne datoteke. Ako lokalnih nema, učitavaju se s Unsplasha/Pexelsa.
+// Web3Forms: upiti stižu na mbmetamont@gmail.com
+const WEB3FORMS_KEY = 'a5957fd6-d805-43af-a93d-6f8d614d95f0';
+
 const pic = (name: string) => {
   const local = lokalnoPostoji(process.cwd(), name);
   const url = (w: number) => (local ? `/img/${name}-${w}.jpg` : remoteUrl(name, w));
@@ -272,8 +275,12 @@ const mailIco = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stro
       </div>
 
       <form class="form" id="upit" novalidate>
+        <input type="hidden" name="access_key" value={WEB3FORMS_KEY} />
+        <input type="hidden" name="subject" value="Novi upit s web stranice mbmetamont.hr" />
+        <input type="hidden" name="from_name" value="MB Metamont web stranica" />
+        <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
         <h3>Zatražite ponudu</h3>
-        <p>Bez obveze. Ispunite podatke i pošaljite upit e-mailom ili porukom na WhatsApp.</p>
+        <p>Bez obveze. Ispunite podatke i javit ćemo vam se u najkraćem roku.</p>
         <div class="f2">
           <div class="fld"><label for="ime">Ime i prezime *</label><input id="ime" name="ime" required autocomplete="name" /></div>
           <div class="fld"><label for="telefon">Telefon *</label><input id="telefon" name="telefon" type="tel" required autocomplete="tel" /></div>
@@ -290,9 +297,10 @@ const mailIco = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stro
         </div>
         <div class="fld"><label for="poruka">Nekoliko riječi o podu</label><textarea id="poruka" name="poruka" placeholder="Vrsta poda, stanje, prostorije..."></textarea></div>
         <div class="btns">
-          <button class="btn btn-p" type="submit" data-via="mail"><Fragment set:html={mailIco} /> Pošaljite e-mailom</button>
+          <button class="btn btn-p" type="submit" data-via="web"><Fragment set:html={mailIco} /> Pošaljite upit</button>
           <button class="btn btn-wa" type="submit" data-via="wa"><Fragment set:html={waIco} /> Pošaljite na WhatsApp</button>
         </div>
+        <div class="err" role="alert">Slanje nije uspjelo. Pokušajte ponovno ili nas nazovite na {K.tel}.</div>
         <small>Vaše podatke koristimo isključivo za odgovor na upit.</small>
       </form>
     </div></div></section>
@@ -363,7 +371,7 @@ const mailIco = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stro
     $$('.q').forEach(function(q){var b=$('button',q),a=$('.a',q);b.addEventListener('click',function(){var o=q.classList.toggle('open');a.style.maxHeight=o?a.scrollHeight+'px':'0';b.setAttribute('aria-expanded',o)})});
 
     /* obrazac -> e-mail ili WhatsApp */
-    var f=$('#upit'), via='mail';
+    var f=$('#upit'), via='web';
     $$('button[type=submit]',f).forEach(function(b){b.addEventListener('click',function(){via=b.getAttribute('data-via')})});
     f.addEventListener('submit',function(e){
       e.preventDefault();
@@ -377,8 +385,22 @@ const mailIco = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stro
       if(d.get('povrsina'))lines.push('Površina: '+d.get('povrsina')+' m²');
       if(d.get('poruka'))lines.push('','Poruka: '+d.get('poruka'));
       var txt=lines.join('\n');
-      if(via==='wa'){window.open('https://wa.me/38664264500?text='+encodeURIComponent(txt),'_blank')}
-      else{location.href='mailto:mbmetamont@gmail.com?subject='+encodeURIComponent('Upit za ponudu – '+d.get('ime'))+'&body='+encodeURIComponent(txt)}
+      if(via==='wa'){window.open('https://wa.me/38664264500?text='+encodeURIComponent(txt),'_blank');return}
+      var btn=$('button[data-via=web]',f),err=$('.err',f),old=btn.innerHTML;
+      err.style.display='none';btn.disabled=true;btn.textContent='Slanje...';
+      var data={};d.forEach(function(v,k){data[k]=v});
+      if(usl)data.usluga=usl;
+      data.subject='Novi upit: '+d.get('ime')+(usl?' – '+usl:'');
+      if(!data.email)delete data.email;
+      fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(data)})
+        .then(function(r){return r.json()})
+        .then(function(j){
+          if(!j.success)throw new Error(j.message);
+          var ok=document.createElement('div');ok.className='ok';
+          ok.innerHTML='<b>Hvala na upitu!</b><span>Javit ćemo vam se u najkraćem roku.</span>';
+          f.replaceWith(ok);
+        })
+        .catch(function(){btn.disabled=false;btn.innerHTML=old;err.style.display='block'});
     });
 
     /* odabir usluge iz kartica */
